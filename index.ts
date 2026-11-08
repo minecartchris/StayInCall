@@ -8,7 +8,7 @@ import { definePluginSettings } from "@api/Settings";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy } from "@webpack";
-import { AuthenticationStore, CallStore, ChannelStore, showToast, Toasts, UserStore, VoiceStateStore } from "@webpack/common";
+import { AuthenticationStore, CallStore, ChannelStore, showToast, UserStore, VoiceStateStore } from "@webpack/common";
 
 const { selectVoiceChannel } = findByPropsLazy("selectVoiceChannel", "selectChannel");
 
@@ -125,7 +125,10 @@ function rejoin(channelId: string) {
     if (settings.store.notify) {
         const channel = ChannelStore.getChannel(channelId);
         const name = channel?.name || "the call";
-        showToast(`Rejoined ${name}`, Toasts.Type.SUCCESS);
+        showToast({
+			text: `Rejoined ${name}`,
+			variant: "success"
+		});;
     }
 
     setTimeout(() => {
@@ -145,7 +148,10 @@ function handleDisconnect(channelId: string) {
     if (rejoinCount >= settings.store.maxRejoins) {
         logger.warn(`Giving up after ${rejoinCount} rejoins`);
         if (settings.store.notify) {
-            showToast("StayInCall gave up rejoining", Toasts.Type.FAILURE);
+            showToast({
+				text: "StayInCall gave up rejoining",
+				variant: "failure"
+			});
         }
         return;
     }
